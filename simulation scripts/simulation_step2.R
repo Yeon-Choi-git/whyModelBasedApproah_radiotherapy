@@ -179,8 +179,8 @@ df_res <- data.table(
 )
 
 output_nam <- paste0("scenario_", setting, "_", scenario, ".csv")
-fwrite(df_res, file = file.path(results_dir, output_nam))
-rm(df_res, output_nam, list = saving_objects_names)
+fwrite(df_res, file = file.path(results_dir, "raw output", output_nam))
+rm(df_res, output_nam, saving_objects)
 message(paste("Simulation outputs for", setting, scenario, "saved."))
 message("-----------GO TO NEXT------------")
 

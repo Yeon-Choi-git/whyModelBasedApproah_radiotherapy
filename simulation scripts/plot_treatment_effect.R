@@ -4,25 +4,25 @@ for(j in 1:length(scenario_list)){
   this_scenario <- scenario_list[j]
   
   this_file <-  paste0("scenario_", setting, "_", this_scenario, ".csv")
-  this_results <- as.data.table(fread(file.path(results_dir, this_file), header = TRUE)) 
+  this_results <- as.data.table(fread(file.path(results_dir, "raw output", this_file), header = TRUE)) 
   
   this_results[, scenario := this_scenario]
   fin_results[[j]] <- this_results
 }
 fin_results <- rbindlist(fin_results)
 
-
-#-------------------- plot risk differences ------------------------#
+#-------------------- Made box plots ------------------------#
+source(file.path("common functionality", "functions", "treatment_effect_boxplots.R"))
 cutoff_lables <- paste0(cutoff_per*100, "%")
 plot_rd <- vector("list", length = length(scenario_list))
 plot_or <- vector("list", length = length(scenario_list))
 
-#pdf("ATT_riskdiff_plot.pdf")
 for(i in 1:length(scenario_list)){
   this_scenario <- scenario_list[i]  
   
   this_subset <- subset(fin_results, scenario == scenario_list[i])
   
+  #--- prepare input for the risk differences
   df_boxplot_rd <- this_subset[, c("scenario",
                                    "delta",
                                    "riskdiff_true",
@@ -37,6 +37,7 @@ for(i in 1:length(scenario_list)){
                  values_to = "treatment_effect") %>%
     mutate(model = factor(model, levels = c("true", "current", "extended")))
   
+  #--- prepare input for the odds ratios
   df_boxplot_or <- this_subset[, c("scenario",
                                    "delta",
                                    "or_true_list",
@@ -51,7 +52,7 @@ for(i in 1:length(scenario_list)){
                  values_to = "treatment_effect") %>%
     mutate(model = factor(model, levels = c("true", "current", "extended")))
   
-  
+  #--- make plots per scenario: risk diff
   plot_rd[[i]] <- make_boxplots (
     input_dat = df_boxplot_rd,
     aes_x = "ntcp_cutoff",
@@ -66,6 +67,7 @@ for(i in 1:length(scenario_list)){
     scale_x_discrete = cutoff_lables
   )
   
+  #--- make plots per scenario: OR
   plot_or[[i]] <- make_boxplots (
     input_dat = df_boxplot_or,
     aes_x = "ntcp_cutoff",
@@ -79,9 +81,9 @@ for(i in 1:length(scenario_list)){
     ylim = c(0.25, 0.75),
     scale_x_discrete = cutoff_lables
   ) 
-  
 }
 
+#--- Combine all plots into one per setting: risk diff
 plot_rd_combined <- ggpubr::ggarrange(
   plot_rd[[1]], 
   plot_rd[[2]],
@@ -99,8 +101,13 @@ plot_rd_combined <- annotate_figure(
                   face = "bold", 
                   size = 11),
   left = text_grob(setting, rot = 90))
-print(plot_rd_combined)  
 
+# save plot
+ggsave(filename = file.path(results_dir, "figures", paste0(setting, "_RD.png")), 
+       plot = plot_rd_combined, width = 12, height = 2.5, dpi = 300)
+
+
+#--- Combine all plots into one per setting: OR
 plot_or_combined <- ggpubr::ggarrange(
   plot_or[[1]], 
   plot_or[[2]],
@@ -117,7 +124,8 @@ plot_or_combined <- annotate_figure(
   top = text_grob(paste0("Treatment effect in odds ratio"), 
                   face = "bold", 
                   size = 11),
-  left = text_grob("Odds ratio", rot = 90))
-print(plot_or_combined)  
+  left = text_grob(setting, rot = 90))
+ggsave(filename = file.path(results_dir, "figures", paste0(setting, "_OR.png")), 
+       plot = plot_or_combined, width = 12, height = 2.5, dpi = 300)
 
-#dev.off()
+rm(plot_or, plot_rd, plot_or_combined, plot_or_combined, df_boxplot_rd, df_boxplot_or)

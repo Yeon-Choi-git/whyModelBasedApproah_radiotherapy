@@ -5,7 +5,6 @@ source(file.path("common functionality", "load_packages.R"))
 source(file.path("common functionality", "load_functions.R"))
 # create a folder to save results
 results_dir <- file.path("results")
-if(!dir.exists(results_dir)) dir.create(results_dir)
 
 #======= Set global simulation settings =======#
 #--- Number of observations for each step.
@@ -17,7 +16,8 @@ n_step2 <- 5000  # Step 2: model validation
 cutoff_per <- c(0, 0.1, 0.2) 
 
 # How many simulation iterations to run for Step 2?
-nsim <- 500
+# The paper used 1000
+nsim <- 100
 
 # Set seeds
 seed_step1 <- NULL #971123 
@@ -50,9 +50,8 @@ for(setting in setting_list){
     source(file.path("simulation scripts", "simulation_step1.R"))
     source(file.path("simulation scripts", "simulation_step2.R"))
   }
+  # Produce combined tables
   source(file.path("simulation scripts", "combine_results.R"))
+  # Produce treatment effect plots
+  source(file.path("simulation scripts", "plot_treatment_effect.R"))
 }
-# Produce treatment effect plots
-source(file.path("simulation scripts", "plot_treatment_effect.R"))
-
-

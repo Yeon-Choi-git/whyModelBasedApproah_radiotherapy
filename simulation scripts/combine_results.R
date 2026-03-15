@@ -7,7 +7,7 @@ for(i in 1:length(scenario_list)){
   this_scenario <- scenario_list[i]
 
   this_file <- paste0("scenario_", setting, "_", this_scenario, ".csv")
-  this_results <- as.data.table(fread(file.path(results_dir, this_file), header = TRUE)) 
+  this_results <- as.data.table(fread(file.path(results_dir, "raw output", this_file), header = TRUE)) 
   
   this_summary <- this_results %>%
     mutate(delta = factor(delta)) %>% 
@@ -143,7 +143,7 @@ fin_results_shell_fin <- fin_results_shell %>%
                  )
 
 output_nam <- paste0("combined_", setting, ".csv")
-fwrite(fin_results_shell_fin , file.path(results_dir, output_nam ))
+fwrite(fin_results_shell_fin , file.path(results_dir, "tables", output_nam))
 rm(this_scenario, this_file, this_results, this_summary, fin_results_shell,
    round_1digit, round_3digit, fin_results_shell_fin, output_nam)
 
