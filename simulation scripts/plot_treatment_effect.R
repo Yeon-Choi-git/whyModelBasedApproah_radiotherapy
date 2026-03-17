@@ -128,4 +128,4 @@ plot_or_combined <- annotate_figure(
 ggsave(filename = file.path("results", "figures", paste0(setting, "_OR.png")), 
        plot = plot_or_combined, width = 12, height = 2.5, dpi = 300)
 
-rm(plot_or, plot_rd, plot_or_combined, plot_or_combined, df_boxplot_rd, df_boxplot_or)
+rm(plot_or, plot_rd, plot_rd_combined, plot_or_combined, df_boxplot_rd, df_boxplot_or)
