@@ -61,13 +61,13 @@ scenario_list <- c("1", "2", "3.1", "3.2", "4.1", "4.2")
 
 #### Scenario paramteres
 
--   multiplier_tstage_to_does: multiplier for regression coefficients from T-stage to doses to organs at risks (exposure)
+-   `multiplier_tstage_to_does`: multiplier for regression coefficients from T-stage to doses to organs at risks (exposure)
 
--   multiplier_tstage_to_outcome: multiplier for regression coefficients from T-stage to dysphagia at 6 months (outcome)
+-   `multiplier_tstage_to_outcome`: multiplier for regression coefficients from T-stage to dysphagia at 6 months (outcome)
 
--   tstate_to_dosediff: whether dose reduction from photon to proton therapy is depended to T-stage.
+-   `tstate_to_dosediff`: whether dose reduction from photon to proton therapy is depended to T-stage.
 
--   tstage_to_dose: whether doses organs at risks is dependent to T-stage.
+-   `tstage_to_dose`: whether doses organs at risks is dependent to T-stage.
 
 Settings used in the manuscript
 
@@ -76,3 +76,12 @@ Settings used in the manuscript
 | Is **T-stage** **confounding** doses to OARs and NTCP (dose-outcome relationship)? `tstate_to_dose` | `TRUE` | `TRUE` | `TRUE` | `FALSE` |
 | Is **T-stage** an **effect modifier** of the treatment effect? `tstage_to_dosediff` | `FALSE` | `FALSE` | `TRUE` | `TRUE` |
 | Which model was used for the model-based selection? (specified in `simulation scripts/simulation_step2.R` line 70-76) | Current model | Extended model | Current model | Current model |
+
+|   | Coefficients of T-stage on doses to OAR (exposure) multiplied with `multiplier_tstage_to_does` | Coefficients of T-stage on dysphagia at 6m (outcome) multiplied with `multiplier_tstage_to_outcome` |
+|------------------------|------------------------|------------------------|
+| scenario 1 | `0` (no effect) | `0` |
+| scenario 2 | `1` (as extracted from the patient-level data) | `1` |
+| scenario 3.1 | `1.5` | `1.5` |
+| scenario 3.2 | `3` | `3` |
+| scenario 4.1 | `1` | `1.5` |
+| scenario 4.2 | `1` | `3` |
