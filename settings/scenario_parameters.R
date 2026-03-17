@@ -16,6 +16,5 @@ multiplier_tstage_to_outcome <- case_when(
 
 tstage_to_dosediff <- ifelse(setting %in% c("main", "A1"), FALSE, TRUE)
 tstage_to_dose <- ifelse(setting == "A3" | scenario == "1", FALSE, TRUE)
-message(paste("Box plots saved for", setting))
 
 message(paste("Scenario parameters for", setting, scenario, "is loaded."))
