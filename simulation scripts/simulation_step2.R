@@ -17,7 +17,7 @@ saving_objects_names <- c(
   "outcome_RT_current",
   "outcome_RT_extended",
   "outcome_PT_true",
-
+  
   "riskdiff_true",
   "riskdiff_current",
   "riskdiff_extended",
@@ -26,11 +26,8 @@ saving_objects_names <- c(
   "or_current_list",
   "or_extended_list",
   
-  "c_stat_current_modeldevelopment",
-  "c_stat_extended_modeldevelopment",
-  
-  "c_stat_current_list",
-  "c_stat_extended_list")
+  "c_stat_current_step2",
+  "c_stat_extended_step2")
 
 saving_objects <- setNames(lapply(
   saving_objects_names, 
@@ -44,7 +41,7 @@ set.seed(seed_step2)
 for (this_iter in 1:nsim){
   # print an iteration number at every 10 iteration
   cat("\rStep 2 simulation iteration at:", this_iter, "/", nsim)
-
+  
   step2_dat_1 <- generate_data(n_step2)
   
   #======================================================#
@@ -78,17 +75,6 @@ for (this_iter in 1:nsim){
       step2_dat_2 <- step2_dat_1[NTCP_RT_extended - NTCP_PT_extended >= cutoff_per[this_cutoff], ]
     }
     
-    # #= get c-statistics for predicted NTCP under photon
-    # truestat <- step2_dat_2[, outcome_dysphagia_RT] 
-    # testres_current <- step2_dat_2[, NTCP_RT_current] # current model
-    # c_stat_current <- rcorr.cens(testres_current, truestat)[1]
-    # 
-    # testres_extended <- step2_dat_2[, NTCP_RT_extended] # extended model
-    # c_stat_extended <- rcorr.cens(testres_extended, truestat)[1]
-    # 
-    # testres_current <- step2_dat_2[, NTCP_RT_current] # current model
-    # c_stat_current <- rcorr.cens(testres_current, truestat)[1]
-    
     #= predicted binary outcomes under RT
     step2_dat_2[, outcome_dysphagia_RT_current := rbinom(nrow(step2_dat_2), 1, NTCP_RT_current)] 
     step2_dat_2[, outcome_dysphagia_RT_extended := rbinom(nrow(step2_dat_2), 1, NTCP_RT_extended)] 
@@ -120,7 +106,6 @@ for (this_iter in 1:nsim){
     NTCP_RT_current[[save_here]] <- mean(step2_dat_2[, NTCP_RT_current])
     NTCP_RT_extended[[save_here]] <- mean(step2_dat_2[, NTCP_RT_extended])
     NTCP_PT_true[[save_here]] <- mean(step2_dat_2[, NTCP_PT])
-    # not needed: NTCP_PT_current[[save_here]] <- mean(step2_dat_2[, NTCP_PT_current])
     
     #--- Treatment effects
     # Risk differences
@@ -137,8 +122,15 @@ for (this_iter in 1:nsim){
                                             outcome_PT = step2_dat_2[, outcome_dysphagia_PT])
     
     # #c-stats
-    # c_stat_current_list[[save_here]] <- c_stat_current
-    # c_stat_extended_list[[save_here]] <- c_stat_extended
+    c_stat_current_step2[[save_here]] <- get_cstats(model = NULL, 
+                                                    newdata = step2_dat_2,
+                                                    observed_outcome = "outcome_dysphagia_RT",
+                                                    predicted_prob = "NTCP_RT_current")
+    
+    c_stat_extended_step2[[save_here]] <- get_cstats(model = NULL, 
+                                                     newdata = step2_dat_2,
+                                                     observed_outcome = "outcome_dysphagia_RT",
+                                                     predicted_prob = "NTCP_RT_extended")
   }
 }
 rm(
@@ -155,7 +147,7 @@ df_res <- data.table(
   per_proton,
   per_proton_among_T3_4,
   per_T3_4_among_proton,
-  
+
   outcome_RT_true,
   outcome_RT_current,
   outcome_RT_extended,
@@ -167,21 +159,18 @@ df_res <- data.table(
   
   or_true_list,
   or_current_list,
-  or_extended_list#,
+  or_extended_list,
   
-  # c_stat_current_modeldevelopment, 
-  # c_stat_extended_modeldevelopment,
-  # c_stat_current_modeldevelopment,
-  # 
-  # c_stat_current_list,
-  # c_stat_extended_list,
-  # c_stat_current_list,
+  c_stat_current_step1,
+  c_stat_extended_step1,
+
+  c_stat_current_step2,
+  c_stat_extended_step2
 )
 
 output_nam <- paste0("scenario_", setting, "_", scenario, ".csv")
-fwrite(df_res, file = file.path(results_dir, "raw output", output_nam))
+fwrite(df_res, file = file.path("results", "raw output", output_nam))
 rm(df_res, output_nam, saving_objects)
 message(paste("Simulation outputs for", setting, scenario, "saved."))
 message("-----------GO TO NEXT------------")
 
-rm()

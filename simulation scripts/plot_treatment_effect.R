@@ -4,7 +4,7 @@ for(j in 1:length(scenario_list)){
   this_scenario <- scenario_list[j]
   
   this_file <-  paste0("scenario_", setting, "_", this_scenario, ".csv")
-  this_results <- as.data.table(fread(file.path(results_dir, "raw output", this_file), header = TRUE)) 
+  this_results <- as.data.table(fread(file.path("results", "raw output", this_file), header = TRUE)) 
   
   this_results[, scenario := this_scenario]
   fin_results[[j]] <- this_results
@@ -103,7 +103,7 @@ plot_rd_combined <- annotate_figure(
   left = text_grob(setting, rot = 90))
 
 # save plot
-ggsave(filename = file.path(results_dir, "figures", paste0(setting, "_RD.png")), 
+ggsave(filename = file.path("results", "figures", paste0(setting, "_RD.png")), 
        plot = plot_rd_combined, width = 12, height = 2.5, dpi = 300)
 
 
@@ -125,7 +125,7 @@ plot_or_combined <- annotate_figure(
                   face = "bold", 
                   size = 11),
   left = text_grob(setting, rot = 90))
-ggsave(filename = file.path(results_dir, "figures", paste0(setting, "_OR.png")), 
+ggsave(filename = file.path("results", "figures", paste0(setting, "_OR.png")), 
        plot = plot_or_combined, width = 12, height = 2.5, dpi = 300)
 
-rm(plot_or, plot_rd, plot_or_combined, plot_or_combined, df_boxplot_rd, df_boxplot_or)
+rm(plot_or, plot_rd, plot_rd_combined, plot_or_combined, df_boxplot_rd, df_boxplot_or)
