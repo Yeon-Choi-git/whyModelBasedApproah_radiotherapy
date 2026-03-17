@@ -1,33 +1,19 @@
-rm(list = ls()) #clean environment
+#!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#
+#                                                                           #
+#  Please read README for setting simulation & data generating parameters   #
+#                                                                           #
+#!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!#
 
+rm(list = ls()) #clean environment
 # Load dependent packages and functions
 source(file.path("common functionality", "load_packages.R"))
 source(file.path("common functionality", "load_functions.R"))
-# create a folder to save results
-results_dir <- file.path("results")
 
 #======= Set global simulation settings =======#
-#--- Number of observations for each step.
-n_step1 <- 50000 # Step 1: model development
-n_step2 <- 5000  # Step 2: model validation
-
-# Which cutoff for predicted ∆NTCP to use for selection proton patients?
-# Use values between 0 to 1
-cutoff_per <- c(0, 0.1, 0.2) 
-
-# How many simulation iterations to run for Step 2?
-# The paper used 1000
-nsim <- 100
-
-# Set seeds
-seed_step1 <- NULL #971123 
-seed_step2 <- NULL #570313 
-
-#===== Which settings & scenarios to run? =====#
-# Please read READ.ME for specific parameter settings of 
-# each simulation setting & scenario.
+# If you wish to modify the following, go to: setting/global_setting.R
+source(file.path("settings", "global_setting.R"))
 #---------------------------------------------------
-# Main                  # cancer stage has no effect on the toxicity outcome
+# main                  # cancer stage has no effect on the toxicity outcome
 # A1                    # original coefficients extracted from the data
 # A2                    # enhance 'T-stage -> dose' & 'T-stage -> dysphagia'
 # A3                    # enhance 'T-stage -> dysphagia'
@@ -37,10 +23,6 @@ seed_step2 <- NULL #570313
 # scenario 3.1 to 3.2   # enhance 'T-stage -> dose' & 'T-stage -> dysphagia'
 # scenario 4.1 to 4.1   # enhance 'T-stage -> dysphagia'
 #----------------------------------------------------
-# possible settings to add: "main", "A1", "A2", "A3"
-setting_list <- c("main", "A1", "A2", "A3") 
-# possible scenario to add: "1", "2", "3.1", "3.2", "4.1", "4.2"
-scenario_list <- c("1", "2", "3.1", "3.2", "4.1", "4.2")
 
 #================ Run scripts =================#
 for(setting in setting_list){
