@@ -12,8 +12,8 @@ cutoff_per <- c(0, 0.1, 0.2)
 nsim <- 100
 
 # Set seeds
-seed_step1 <- NULL  
-seed_step2 <- NULL 
+seed_step1 <- NULL #570313
+seed_step2 <- NULL #971123
 
 #===== Which settings & scenarios to run? =====#
 # possible settings to add: "main", "A1", "A2", "A3"
