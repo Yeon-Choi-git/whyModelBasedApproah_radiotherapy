@@ -8,7 +8,7 @@ The scripts reproduce analyses and figures presented in the manuscript.
 
 ## Note
 
-Please note that the numerical values of the outputs obtained from running the scripts may not exactly match the numerical values presented in the manuscript. This is because the original script used for the manuscript contains a step extracting data generating coefficients from individual-level patient data. The script is slightly modified to skip using the patient data and instead read hard-coded coefficients used in the original scripts.
+Please note that the numerical values of the outputs obtained from running the scripts may not exactly match the numerical values presented in the manuscript. This is because the original scripts used for the manuscript included a step extracting data generating coefficients from individual-level patient data. The script is slightly modified to skip using the patient data but instead read hard-coded coefficients extracted in the original scripts.
 
 ## Repo structure
 
